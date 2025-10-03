@@ -5,12 +5,14 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
-from pytube import YouTube
+import yt_dlp
 from django.conf import settings
 import os
 import assemblyai as aai
 import openai 
 from urllib.error import HTTPError
+from googleapiclient.discovery import build
+import re
 
 # Create your views here.
 @login_required
@@ -48,29 +50,50 @@ def generate_blog(request):
     else:
         return JsonResponse({'error':'Invalid request method'}, status=405)
 
+
+YOUTUBE_API_KEY = "AIzaSyAE0k--WmwXY9jm2_1YVk0fB1VDG1ua6Rw"
 def yt_title(link):
+    video_id = extract_video_id(link)
+    if not video_id:
+        return "Link YouTube không hợp lệ"
+
     try:
-        yt = YouTube(link)
-        return yt.title
-    except HTTPError as e:
-        print("=================")
-        print("YouTube HTTP Error:", e)
-        return "Không lấy được tiêu đề"
+        youtube = build("youtube", "v3", developerKey=YOUTUBE_API_KEY)
+        request = youtube.videos().list(
+            part="snippet",
+            id=video_id
+        )
+        response = request.execute()
+        
+        if response["items"]:
+            return response["items"][0]["snippet"]["title"]
+        else:
+            return "Không tìm thấy video"
     except Exception as e:
-        print("=================")
-        print("YouTube Error:", e)
-        return "Lỗi không xác định"
+        print("YouTube API Error:", e)
+        return "Không lấy được tiêu đề"
 
 # Download Audio to System
 def download_audio(link):
-    yt = YouTube(link)
-    video = yt.streams.filter(only_audio=True).first()
-    out_file = video.download(output_path=settings.MEDIA_ROOT)
-    base, ext = os.path.splitext(out_file)
-    new_file = base + '.mp3'
-    os.rename(out_file,new_file)
-    return new_file
+    output_path = os.path.join(settings.MEDIA_ROOT, "%(id)s.%(ext)s")
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'outtmpl': output_path,
+        'ffmpeg_location': r"D:\Coding_Design\ffmpeg\bin",  
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+    }
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info_dict = ydl.extract_info(link, download=True)
+        return os.path.join(settings.MEDIA_ROOT, f"{info_dict['id']}.mp3")
 
+def extract_video_id(url):
+    regex = r"(?:v=|\/)([0-9A-Za-z_-]{11}).*"
+    match = re.search(regex, url)
+    return match.group(1) if match else None
 
 def get_transcription(link):
     audio_file = download_audio(link)
@@ -95,7 +118,6 @@ def generate_blog_from_transcription(transcription):
     generated_conent = response.choices[0].text.strip()
 
     return generated_conent
-
 
 
 # Login Form
