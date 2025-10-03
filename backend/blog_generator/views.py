@@ -10,6 +10,7 @@ from django.conf import settings
 import os
 import assemblyai as aai
 import openai 
+from urllib.error import HTTPError
 
 # Create your views here.
 @login_required
@@ -22,10 +23,9 @@ def generate_blog(request):
         try:
             data = json.loads(request.body)
             yt_link = data['link'] 
-            return JsonResponse({'content': yt_link})
         except (KeyError, json.JSONDecodeError):
             return JsonResponse({'error':'Invalid data sent'}, status=400)
-        
+
         # get yt title
         title =  yt_title(yt_link)
 
@@ -49,9 +49,17 @@ def generate_blog(request):
         return JsonResponse({'error':'Invalid request method'}, status=405)
 
 def yt_title(link):
-    yt = YouTube(link)
-    title = yt.title
-    return title
+    try:
+        yt = YouTube(link)
+        return yt.title
+    except HTTPError as e:
+        print("=================")
+        print("YouTube HTTP Error:", e)
+        return "Không lấy được tiêu đề"
+    except Exception as e:
+        print("=================")
+        print("YouTube Error:", e)
+        return "Lỗi không xác định"
 
 # Download Audio to System
 def download_audio(link):
@@ -66,7 +74,7 @@ def download_audio(link):
 
 def get_transcription(link):
     audio_file = download_audio(link)
-    aai.settings.api_key = ""
+    aai.settings.api_key = "675e7efb03a64ab79d4745b6248afc24"
 
     transcriber = aai.Transcriber()
     transcript = transcriber.transcribe(audio_file)
@@ -74,7 +82,7 @@ def get_transcription(link):
     return transcriber.text
 
 def generate_blog_from_transcription(transcription):
-    openai.api_key = ""
+    openai.api_key = "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"
 
     prompt = f"Based on the following transcript from a YouTube video, write a comprehensive blog article, write it based on the transcript, but dont make it look like a youtube video, make it look like a proper blog article:\n\n{transcription}\n\nArticle:"
 
