@@ -43,7 +43,7 @@ def generate_blog(request):
             return JsonResponse({'error':'Failed to generate blog article'}, status=500)
 
         # save blog article to database
-
+        
 
         # return blog article as a response
         return JsonResponse({'content': blog_content})
