@@ -8,8 +8,10 @@
 
 Built with the tools and technologies:  
 ![Markdown](https://img.shields.io/badge/Markdown-000000?logo=markdown&logoColor=white) 
-![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)
-
+![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white) 
+![Google Gemini](https://img.shields.io/badge/Gemini%20API-4285F4?logo=google&logoColor=white) 
+![AssemblyAI](https://img.shields.io/badge/AssemblyAI-FF6F61?logo=ai&logoColor=white) 
+![FFmpeg](https://img.shields.io/badge/FFmpeg-007808?logo=ffmpeg&logoColor=white)
 ---
 
 ## Table of Contents
