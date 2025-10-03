@@ -67,3 +67,13 @@ Using conda:
   conda activate {venv}
   python {entrypoint}
   ```
+### Testing
+SnakeAIBlog uses the {test_framework} test framework. Run the test suite with:
+Using conda:
+```bash
+pytest
+```
+
+---
+
+
