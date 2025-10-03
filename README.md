@@ -60,14 +60,10 @@ Using conda:
    ```bash
    conda env create -f conda.yml
 
-
 ### Usage
 Run the project with:
 Using conda:
   ```bash
   conda activate {venv}
   python {entrypoint}
-
-
-
-
+  ```
