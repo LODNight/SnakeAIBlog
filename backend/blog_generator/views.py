@@ -13,6 +13,7 @@ import google.generativeai as genai
 from urllib.error import HTTPError
 from googleapiclient.discovery import build
 import re
+from .models import BlogPost
 
 
 # Create your views here.
@@ -43,7 +44,13 @@ def generate_blog(request):
             return JsonResponse({'error':'Failed to generate blog article'}, status=500)
 
         # save blog article to database
-        
+        new_blog_article = BlogPost.objects.create(
+            user = request.user,
+            youtube_title = title, 
+            youtube_link = yt_link,
+            generated_content = blog_content,
+        )
+        new_blog_article.save()
 
         # return blog article as a response
         return JsonResponse({'content': blog_content})
