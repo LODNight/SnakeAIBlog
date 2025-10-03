@@ -108,14 +108,16 @@ def get_transcription(link):
 genai.configure(api_key=settings.GEMINI_API_KEY)
 def generate_blog_from_transcription(transcription):
     
-    model = genai.GenerativeModel("gemini-1.5-flash")
     prompt = f"Based on the following transcript from a YouTube video, write a comprehensive blog article, write it based on the transcript, but dont make it look like a youtube video, make it look like a proper blog article:\n\n{transcription}\n\nArticle:"
 
-    response = model.generate_content(prompt)
+    try:
+        model = genai.GenerativeModel("gemini-2.5-flash")
+        response = model.generate_content(prompt)
+    except Exception as e:
+        print(" gemini-2.5-flash lỗi:", e)
+        response = model.generate_content(prompt)
 
-    generated_conent = response.choices[0].text.strip()
-
-    return generated_conent
+    return response.text
 
 
 # Login Form
