@@ -9,10 +9,11 @@ import yt_dlp
 from django.conf import settings
 import os
 import assemblyai as aai
-import openai 
+import google.generativeai as genai
 from urllib.error import HTTPError
 from googleapiclient.discovery import build
 import re
+
 
 # Create your views here.
 @login_required
@@ -51,14 +52,13 @@ def generate_blog(request):
         return JsonResponse({'error':'Invalid request method'}, status=405)
 
 
-YOUTUBE_API_KEY = "AIzaSyAE0k--WmwXY9jm2_1YVk0fB1VDG1ua6Rw"
 def yt_title(link):
     video_id = extract_video_id(link)
     if not video_id:
         return "Link YouTube không hợp lệ"
 
     try:
-        youtube = build("youtube", "v3", developerKey=YOUTUBE_API_KEY)
+        youtube = build("youtube", "v3", developerKey=os.getenv("YOUTUBE_API_KEY"))
         request = youtube.videos().list(
             part="snippet",
             id=video_id
@@ -97,22 +97,21 @@ def extract_video_id(url):
 
 def get_transcription(link):
     audio_file = download_audio(link)
-    aai.settings.api_key = "675e7efb03a64ab79d4745b6248afc24"
+    aai.settings.api_key = os.getenv("ASSEMBLY_API_KEY")
 
     transcriber = aai.Transcriber()
     transcript = transcriber.transcribe(audio_file)
 
     return transcript.text
 
+
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 def generate_blog_from_transcription(transcription):
-    openai.api_key = os.environ.get("OPENAI_API_KEY")
+    
+    model = genai.GenerativeModel("gemini-1.5-pro")
     prompt = f"Based on the following transcript from a YouTube video, write a comprehensive blog article, write it based on the transcript, but dont make it look like a youtube video, make it look like a proper blog article:\n\n{transcription}\n\nArticle:"
 
-    response = openai.completions.create(
-        model="gpt-3.5-turbo",
-        prompt=prompt,
-        max_tokens=1000
-    )
+    response = model.generate_content(prompt)
 
     generated_conent = response.choices[0].text.strip()
 
