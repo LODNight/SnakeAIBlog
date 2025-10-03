@@ -141,4 +141,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_URL = 'login'
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+ASSEMBLY_API_KEY = os.getenv("ASSEMBLY_API_KEY")
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")

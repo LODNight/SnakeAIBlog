@@ -58,7 +58,7 @@ def yt_title(link):
         return "Link YouTube không hợp lệ"
 
     try:
-        youtube = build("youtube", "v3", developerKey=os.getenv("YOUTUBE_API_KEY"))
+        youtube = build("youtube", "v3", developerKey=settings.YOUTUBE_API_KEY)
         request = youtube.videos().list(
             part="snippet",
             id=video_id
@@ -97,7 +97,7 @@ def extract_video_id(url):
 
 def get_transcription(link):
     audio_file = download_audio(link)
-    aai.settings.api_key = os.getenv("ASSEMBLY_API_KEY")
+    aai.settings.api_key = settings.ASSEMBLY_API_KEY
 
     transcriber = aai.Transcriber()
     transcript = transcriber.transcribe(audio_file)
@@ -105,10 +105,10 @@ def get_transcription(link):
     return transcript.text
 
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+genai.configure(api_key=settings.GEMINI_API_KEY)
 def generate_blog_from_transcription(transcription):
     
-    model = genai.GenerativeModel("gemini-1.5-pro")
+    model = genai.GenerativeModel("gemini-1.5-flash")
     prompt = f"Based on the following transcript from a YouTube video, write a comprehensive blog article, write it based on the transcript, but dont make it look like a youtube video, make it look like a proper blog article:\n\n{transcription}\n\nArticle:"
 
     response = model.generate_content(prompt)
