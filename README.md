@@ -23,7 +23,7 @@ Built with the tools and technologies:
 ---
 
 ## Overview
-SnakeAIBlog is a full-stack application that harnesses AI to convert YouTube videos into insightful blog articles, focusing on AI and gaming content. Built with Python (Django) and VueJS, it offers an interactive platform for content sharing and community engagement.
+SnakeAIBlog is a full-stack application that harnesses AI to convert YouTube videos into insightful blog articles, focusing on AI and infor of snake content. Built with Python (Django) and Tailwind, it offers an interactive platform for content sharing and community engagement.
 
 ### Why SnakeAIBlog?
 This project streamlines the process of content creation by automating blog generation from video sources.  
@@ -31,7 +31,7 @@ The core features include:
 
 - 📝 **AI Content Generation**: Automates blog creation from YouTube links using AI, saving time and effort.  
 - 🔐 **Secure User Authentication**: Provides login and signup interfaces for personalized user experiences.  
-- 🌐 **Interactive Frontend**: Engaging UI with VueJS for seamless navigation.  
+- 🌐 **Interactive Frontend**: Engaging UI with Tailwind for seamless navigation.  
 - 📊 **Community Engagement**: Allows sharing, commenting, and interactive discussion on AI-driven blogs.  
 
 ---
