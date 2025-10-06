@@ -25,13 +25,15 @@
             <section>
                 <h2 class="text-xl mb-4 font-semibold">All Blog Posts</h2>
                 <div class="space-y-4">
+                    {% for article in blog_articles %}
                     <div class="border border-gray-300 p-4 rounded">
-                        <h3 class="text-lg font-semibold">Blog Post Title 1</h3>
-                        <p>This is content of blog post. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam deleniti facilis enim. Facilis magni animi cum totam laboriosam exercitationem eius. Quia inventore dignissimos quam aliquid, non fugit repudiandae sed unde.</p>
+                        <h3 class="text-lg font-semibold">{{article.youtube_title}}</h3>
+                        <p>{{article.generated_content | truncatechars:80}}</p>
                     </div>
+                    {% endfor %} 
                     <div class="border border-gray-300 p-4 rounded">
-                        <h3 class="text-lg font-semibold">Blog Post Title 2</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam deleniti facilis enim. Facilis magni animi cum totam laboriosam exercitationem eius. Quia inventore dignissimos quam aliquid, non fugit repudiandae sed unde.</p>
+                        <h3 class="text-lg font-semibold">Hello</h3>
+                        <p>Name</p>
                     </div>
                     <!-- Repeat  -->
 

@@ -36,12 +36,16 @@ def generate_blog(request):
         # get transcript
         transcription = get_transcription(yt_link)
         print(yt_link)
+        print("+=====+")
+        print(transcription)
         if not transcription:
             return JsonResponse({'error':'Failed to get transcript'}, status = 500)
 
         # use openAI to generate the blog
         blog_content = generate_blog_from_transcription(transcription)
-        print(transcription)
+        print("+=====+")
+        print(blog_content)
+
         if not blog_content:
             return JsonResponse({'error':'Failed to generate blog article'}, status=500)
 
@@ -110,11 +114,16 @@ def get_transcription(link):
 
     transcriber = aai.Transcriber()
     transcript = transcriber.transcribe(audio_file)
+    print("xxxxxxxxxxxxxxxxxx")
+    print(transcriber)
+    print(transcript)
+    print(transcript.text)
+    print("xxxxxxxxxxxxxxxxxx")
 
     return transcript.text
 
 
-genai.configure(api_key=settings.GEMINI_API_KEY)
+# genai.configure(api_key=settings.GEMINI_API_KEY)
 def generate_blog_from_transcription(transcription):
     
     # prompt = f"Based on the following transcript from a YouTube video, write a comprehensive blog article, write it based on the transcript, but dont make it look like a youtube video, make it look like a proper blog article:\n\n{transcription}\n\nArticle:"
@@ -127,9 +136,18 @@ def generate_blog_from_transcription(transcription):
     #     response = model.generate_content(prompt)
 
     # return response.text
-    return "HEllo word"
+    print(transcription)
+    print("+====+")
+    return "Hello"
 
 
+# blog-list
+def blog_list(request):
+    blog_articles = BlogPost.objects.filter(user = request.user)
+    return render(request,"all-blogs.html",{'blog_articles':blog_articles})
+
+def blog_details(request):
+    pass
 # Login Form
 def user_login(request):
     if request.method == 'POST':
