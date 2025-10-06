@@ -35,11 +35,13 @@ def generate_blog(request):
 
         # get transcript
         transcription = get_transcription(yt_link)
+        print(yt_link)
         if not transcription:
             return JsonResponse({'error':'Failed to get transcript'}, status = 500)
 
         # use openAI to generate the blog
         blog_content = generate_blog_from_transcription(transcription)
+        print(transcription)
         if not blog_content:
             return JsonResponse({'error':'Failed to generate blog article'}, status=500)
 
@@ -115,16 +117,17 @@ def get_transcription(link):
 genai.configure(api_key=settings.GEMINI_API_KEY)
 def generate_blog_from_transcription(transcription):
     
-    prompt = f"Based on the following transcript from a YouTube video, write a comprehensive blog article, write it based on the transcript, but dont make it look like a youtube video, make it look like a proper blog article:\n\n{transcription}\n\nArticle:"
+    # prompt = f"Based on the following transcript from a YouTube video, write a comprehensive blog article, write it based on the transcript, but dont make it look like a youtube video, make it look like a proper blog article:\n\n{transcription}\n\nArticle:"
 
-    try:
-        model = genai.GenerativeModel("gemini-2.5-flash")
-        response = model.generate_content(prompt)
-    except Exception as e:
-        print(" gemini-2.5-flash lỗi:", e)
-        response = model.generate_content(prompt)
+    # try:
+    #     model = genai.GenerativeModel("gemini-2.5-flash")
+    #     response = model.generate_content(prompt)
+    # except Exception as e:
+    #     print(" gemini-2.5-flash lỗi:", e)
+    #     response = model.generate_content(prompt)
 
-    return response.text
+    # return response.text
+    return "HEllo word"
 
 
 # Login Form
